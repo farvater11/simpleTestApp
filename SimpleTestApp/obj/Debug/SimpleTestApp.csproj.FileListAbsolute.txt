@@ -1,0 +1,7 @@
+C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\bin\Debug\SimpleTestApp.exe.config
+C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\bin\Debug\SimpleTestApp.exe
+C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\bin\Debug\SimpleTestApp.pdb
+C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\obj\Debug\SimpleTestApp.csprojAssemblyReference.cache
+C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\obj\Debug\SimpleTestApp.csproj.CoreCompileInputs.cache
+C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\obj\Debug\SimpleTestApp.exe
+C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\obj\Debug\SimpleTestApp.pdb
