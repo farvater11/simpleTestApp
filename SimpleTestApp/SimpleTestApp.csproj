@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Control\MainControl.cs" />
     <Compile Include="Model\ToDoTask.cs" />
     <Compile Include="Model\ToDoTaskList.cs" />
     <Compile Include="Model\User.cs" />
