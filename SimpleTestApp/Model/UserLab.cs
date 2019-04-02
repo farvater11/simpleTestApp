@@ -28,42 +28,60 @@ namespace SimpleTestApp.Model
 
         public List<User> GetUserList()
         {
-            return userList;
+            using (SimpleTestAppContext context = new SimpleTestAppContext())
+            {
+
+                return userList;
+            }
         }
 
         public void AddUser(User user)
         {
-            userList.Add(user);
+            using (SimpleTestAppContext context = new SimpleTestAppContext())
+            {
+                userList.Add(user);
+                context.Users.Add(user);
+                context.SaveChanges();
+            }
         }
 
         public User GetUser(string username, string password)
         {
-            foreach (var item in userList)
+            using (SimpleTestAppContext context = new SimpleTestAppContext())
             {
-                if (item.Username.Equals(username) && item.Password.Equals(password))
-                    return item;
+                foreach (var item in userList)
+                {
+                    if (item.Username.Equals(username) && item.Password.Equals(password))
+                        return item;
+                }
+                return null;
             }
-            return null;
         }
 
         public User GetUser(Guid id)
         {
-            foreach (var item in userList)
+            using (SimpleTestAppContext context = new SimpleTestAppContext())
             {
-                if (item.Id.Equals(id))
-                    return item;
+                foreach (var item in userList)
+                {
+                    if (item.Id.Equals(id))
+                        return item;
+                }
+                return null;
             }
-            return null;
         }
 
         public void ModifyUser (User user)
         {
-            for(int i = 0; i < userList.Count; i++)
+            using (SimpleTestAppContext context = new SimpleTestAppContext())
             {
-                if (userList[i].Id.Equals(user.Id))
+                for (int i = 0; i < userList.Count; i++)
                 {
-                    userList[i] = user;
-                    break;
+                    if (userList[i].Id.Equals(user.Id))
+                    {
+                        userList[i] = user;
+                        break;
+                    }
                 }
             }
         }

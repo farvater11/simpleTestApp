@@ -41,16 +41,25 @@ namespace SimpleTestApp
             // Registration
             if (newUser)
             {
-                currentUser = MainControl.UserRegistration();
+                Console.Write("Username: "); string username = Console.ReadLine();
+                Console.Write("First name: "); string firstName = Console.ReadLine();
+                Console.Write("Last name: "); string lastName = Console.ReadLine();
+                Console.Write("Password: "); string password = Console.ReadLine();
+
+                currentUser = MainControl.UserRegistration(username, firstName, lastName, password);
                 if(currentUser != null) 
                     Console.WriteLine("\nYou are successfully registered!");
                 else
                     Console.WriteLine("\nUser already does exist");
+                Console.ReadKey();
+                goto labelStart;
             }
             // LoginIn
             else
             {
-                currentUser = MainControl.UserLoginIn();
+                Console.Write("Username: "); string username = Console.ReadLine();
+                Console.Write("Password: "); string password = Console.ReadLine();
+                currentUser = MainControl.UserLoginIn(username, password);
                 if(currentUser == null)
                 {
                     Console.Write("\n User not founded ");
@@ -73,7 +82,7 @@ namespace SimpleTestApp
             }
 
             //See all tasklists
-            Console.Write("\nDo you want to see all your taskLists? (Yes/No): "); string answer1 = Console.ReadLine();
+            Console.Write("\nDo you want to see all your taskLists? (Yes/~): "); string answer1 = Console.ReadLine();
             if (answer1.Equals("Yes"))
             {
                 Console.WriteLine("Total count of lists " + currentUser.ListOfLists.Count + " :");
@@ -113,7 +122,7 @@ namespace SimpleTestApp
             if (currentList != null)
             {
                 //Modify tasklist 
-                Console.Write("\nDo you want to modify current list ? (Yes/No): "); string answer5 = Console.ReadLine();
+                Console.Write("\nDo you want to modify current list ? (Yes/~): "); string answer5 = Console.ReadLine();
                 if (answer5.Equals("Yes"))
                 {
                     Console.Write("Input new title: "); string answerTitle = Console.ReadLine();
@@ -139,7 +148,7 @@ namespace SimpleTestApp
 
 
                 //See all tasks in list 
-                Console.Write("\nDo you want to see tasks in current list ? (Yes/No): "); string answer4 = Console.ReadLine();
+                Console.Write("\nDo you want to see tasks in current list ? (Yes/~): "); string answer4 = Console.ReadLine();
                 if (answer4.Equals("Yes"))
                 {
                     List<ToDoTask> list = MainControl.FindList(currentList.Title, currentUser).Tasks; // Debug. Get  current . Getting count of tasks
@@ -187,10 +196,12 @@ namespace SimpleTestApp
                     Console.Write("\nDo you want to modify current task ? (Yes/No): "); string answer9 = Console.ReadLine();
                     if (answer9.Equals("Yes"))
                     {
-                        Console.Write("Input new title: "); string answerTitle = Console.ReadLine();
+                        Console.Write("Current title: \""+ currentTask.Title +"\". Input new title: "); string answerTitle = Console.ReadLine();
                         currentTask.Title = answerTitle;
-                        Console.Write("Input new task: "); string answerTask = Console.ReadLine();
+                        Console.Write("Current task: \"" + currentTask.Text + "\". Input new task:"); string answerTask = Console.ReadLine();
                         currentTask.Text = answerTask;
+                        Console.Write("Current status: \"" + currentTask.Text + "\". Input new status: (+/~)"); string answerCompleted = Console.ReadLine();
+                        currentTask.IsCompleted = (answerTask == "+" ? true : false);
 
                         currentUser = MainControl.ModifyTask(currentTask, currentList, currentUser);
                         currentList = MainControl.FindList(currentList.Title, currentUser);
@@ -200,16 +211,8 @@ namespace SimpleTestApp
                     }
                 }
             }
-            
-            
-
-
-
-
-
             goto labelAfterStart;
             Console.ReadKey();
         }
-
     } 
 }

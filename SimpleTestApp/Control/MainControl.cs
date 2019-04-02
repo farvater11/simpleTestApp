@@ -9,12 +9,8 @@ namespace SimpleTestApp.Control
 {
     public static class MainControl
     {
-        static public User UserRegistration()
+        static public User UserRegistration(string username, string firstName, string lastName, string password)
         {
-            Console.Write("Username: "); string username = Console.ReadLine();
-            Console.Write("First name: "); string firstName = Console.ReadLine();
-            Console.Write("Last name: "); string lastName = Console.ReadLine();
-            Console.Write("Password "); string password = Console.ReadLine();
             SimpleTestApp.Model.User user = new User(username, firstName, lastName, password);
             if (user != null)
             {
@@ -24,10 +20,8 @@ namespace SimpleTestApp.Control
             }
             return user;
         }
-        static public User UserLoginIn()
+        static public User UserLoginIn(string username, string password)
         {
-            Console.Write("Username: "); string username = Console.ReadLine();
-            Console.Write("Password "); string password = Console.ReadLine();
             User user = UserLab.Get().GetUser(username, password);
             if (user == null)
                 return null;
@@ -53,7 +47,6 @@ namespace SimpleTestApp.Control
             string allTitles = "";
             foreach (var item in user.ListOfLists)
                 allTitles += "Title: \"" + item.Title + "\"; id: " + item.Id + "\n";
-
             return allTitles;
         }
         static public ToDoTaskList FindList(string title, User user)
@@ -94,7 +87,7 @@ namespace SimpleTestApp.Control
             string result = "";
             List<ToDoTask> list = FindList(taskList.Title, user).Tasks; // Debug. Get  current 
             foreach (var item in list)
-                result += "Title: \"" + item.Title + "\"; Text: \"" + item.Text + "\" id: " + item.Id + "\n";
+                result += "Title: \"" + item.Title + "\" is "+(item.IsCompleted ? "Completed" : "Not completed") +"; Text: \"" + item.Text + "\" id: " + item.Id + "\n";
             return result;
         }
         static public bool DeleteTask(ToDoTask task, ToDoTaskList taskList, User user)

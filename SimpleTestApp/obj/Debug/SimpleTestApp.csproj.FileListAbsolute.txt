@@ -5,3 +5,8 @@ C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\obj\Debug\
 C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\obj\Debug\SimpleTestApp.csproj.CoreCompileInputs.cache
 C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\obj\Debug\SimpleTestApp.exe
 C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\obj\Debug\SimpleTestApp.pdb
+C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\bin\Debug\EntityFramework.dll
+C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\bin\Debug\EntityFramework.xml
+C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\dmytro.skorobohatko\source\repos\SimpleTestApp\SimpleTestApp\obj\Debug\SimpleTestApp.csproj.CopyComplete
