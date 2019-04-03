@@ -12,6 +12,5 @@ namespace SimpleTestApp.Model
         }
 
         public DbSet<User> Users { get; set; }
-        
     }
 }
