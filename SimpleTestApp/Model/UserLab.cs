@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,6 +50,13 @@ namespace SimpleTestApp.Model
         {
             using (SimpleTestAppContext context = new SimpleTestAppContext())
             {
+                User user = context.Users
+                    .Include(u => u.ListOfLists)
+                    .Include(u => u.ListOfLists.Select(t => t.Tasks))
+                    .Where(c => (c.Username == username && c.Password == password))
+                    .FirstOrDefault();
+                return user;
+
                 foreach (var item in userList)
                 {
                     if (item.Username.Equals(username) && item.Password.Equals(password))
@@ -62,6 +70,13 @@ namespace SimpleTestApp.Model
         {
             using (SimpleTestAppContext context = new SimpleTestAppContext())
             {
+                User user = context.Users
+                    .Include(u => u.ListOfLists)
+                    .Include(u => u.ListOfLists.Select(t => t.Tasks))
+                    .Where(c => c.Id == id)
+                    .FirstOrDefault();
+                return context.Users.Find(user.Id);
+
                 foreach (var item in userList)
                 {
                     if (item.Id.Equals(id))
@@ -75,6 +90,15 @@ namespace SimpleTestApp.Model
         {
             using (SimpleTestAppContext context = new SimpleTestAppContext())
             {
+                User userModify = context.Users.Find(user.Id);
+                //userModify = user;
+                userModify.FirstName = user.FirstName;
+                userModify.LastName = user.LastName;
+                userModify.Username = user.Username;
+                userModify.Password = user.Password;
+                userModify.ListOfLists = user.ListOfLists;
+                context.SaveChanges();
+                /*
                 for (int i = 0; i < userList.Count; i++)
                 {
                     if (userList[i].Id.Equals(user.Id))
@@ -82,7 +106,7 @@ namespace SimpleTestApp.Model
                         userList[i] = user;
                         break;
                     }
-                }
+                }*/
             }
         }
     }

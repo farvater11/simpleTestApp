@@ -20,5 +20,10 @@ namespace SimpleTestApp.Model
             Id = Guid.NewGuid();
             IsCompleted = false;
         }
+
+        public ToDoTask()
+        {
+        }
+
     }
 }

@@ -24,6 +24,9 @@ namespace SimpleTestApp.Model
             Password = password;
             ListOfLists = new List<ToDoTaskList>();
         }
+        public User()
+        {
+        }
     }
 }
 

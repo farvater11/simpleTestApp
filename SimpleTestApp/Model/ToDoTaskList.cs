@@ -13,12 +13,16 @@ namespace SimpleTestApp.Model
         public string Title { get; set; }
         public List<ToDoTask> Tasks { get; set; }
 
+
        public ToDoTaskList(Guid userId, string title)
         {
             Id = Guid.NewGuid();
             UserId = userId;
             Title = title;
             Tasks = new List<ToDoTask>();
+        }
+        public ToDoTaskList()
+        {
         }
     }
 }

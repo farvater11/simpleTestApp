@@ -290,7 +290,7 @@ namespace SimpleTestApp
             currentList.Title = answerTitle;
 
             currentUser = MainControl.ModifyUserTaskLists(currentList, currentUser);
-            currentList = MainControl.FindList(currentList.Title, currentUser); // Refresh. Now not useful, but in future can be useful 
+            currentList = MainControl.FindList(currentList.Title, currentUser); // Refresh.
 
             Console.WriteLine("You modified list with name \"" + currentList.Title + "\"; and id: " + currentList.Id);
         }
