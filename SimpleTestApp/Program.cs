@@ -56,6 +56,7 @@ namespace SimpleTestApp
                             Console.WriteLine("||Choose some taskList......(3)||");
                             Console.WriteLine("||Delete some taskList......(4)||");
                             Console.WriteLine("||Log out...................(0)||");
+                            Console.WriteLine("||Delete account..........(100)||");
                             Console.WriteLine("  =============================  ");
                             Console.Write("Choose action: "); string answer1 = Console.ReadLine();
                             Console.WriteLine();
@@ -78,6 +79,9 @@ namespace SimpleTestApp
                                     case 0:
                                         currentMenuLevel = 0;
                                         currentUser = null;
+                                        break;
+                                    case 100:
+                                        currentMenuLevel = DeleteAccount(currentMenuLevel);
                                         break;
                                 }
                             }
@@ -192,12 +196,23 @@ namespace SimpleTestApp
         private static void HeadPartView() // CLEAR CONSOLE and Print head 
         {
             Console.Clear();
-            Console.WriteLine("\n  ===Hello " +
+            Console.WriteLine("  ===Hello " +
                 (currentUser != null ? currentUser.Username : "Guest") + "!" +
                 (currentList != null ? ("===" + currentList.Title + "/" +
                     (currentTask != null ? (currentTask.Title) : "")) : ""
             ) + "===  ");
         }
+
+        private static int DeleteAccount(int currentLevel)
+        {
+            Console.Write("Do you want to delete? (Yes/~): "); string answer = Console.ReadLine();
+            if (answer.Equals("Yes"))
+            {
+                MainControl.Delete(currentUser);
+                currentLevel = 0;
+            }
+            return currentLevel;
+        } 
 
         private static void SeeCurrentTasks()//See Task
         {
@@ -215,7 +230,7 @@ namespace SimpleTestApp
             Console.Write("Current status: \"" + (currentTask.IsCompleted ? "Completed" : "Not completed") + "\". Input new status (+/~): "); string answerCompleted = Console.ReadLine();
             if (!answerCompleted.Equals(""))  currentTask.IsCompleted = (answerCompleted.Equals("+") ? true : false);
 
-            currentUser = MainControl.ModifyTask(currentTask, currentList, currentUser);
+            currentUser = MainControl.ModifyTask(currentTask, currentUser);
             currentList = MainControl.FindList(currentList.Title, currentUser);
             currentTask = MainControl.FindTask(currentTask.Title, currentList); // Refresh. Now not useful, but in future can be useful 
 
@@ -230,15 +245,11 @@ namespace SimpleTestApp
                 ToDoTask taskForDelete = MainControl.FindTask(answer15, currentList);
                 if (taskForDelete != null)
                 {
-                    if (MainControl.DeleteTask(taskForDelete, currentList, currentUser)) // If deleted was correctly
-                    {
-                        Console.WriteLine("Task with name \"" + answer15 + "\" has been succesfully deleted");
-                        currentUser = UserLab.Get().GetUser(currentUser.Id); // Refresh current user
-                        currentList = MainControl.FindList(currentList.Title, UserLab.Get().GetUser(currentUser.Id));
-                        currentTask = MainControl.FindTask(answer15, currentList);
-                    }
-                    else
-                        Console.WriteLine("Err");
+                    MainControl.Delete(taskForDelete);
+                    Console.WriteLine("Task with name \"" + answer15 + "\" has been succesfully deleted");
+                    currentUser = UserLab.Get().GetUser(currentUser.Id); // Refresh current user
+                    currentList = MainControl.FindList(currentList.Title, UserLab.Get().GetUser(currentUser.Id));
+                    currentTask = MainControl.FindTask(answer15, currentList);
                 }
                 else
                     Console.WriteLine("Task with name: \"" + answer15 + "\" not found");
@@ -259,7 +270,6 @@ namespace SimpleTestApp
                 else
                     Console.WriteLine("Task with name: \"" + answer14 + "\" not found");
             }
-
             return currentMenuLevel;
         }
 
@@ -300,8 +310,10 @@ namespace SimpleTestApp
             Console.Write("Delete some taskList ?  (%Title%): "); string answer14 = Console.ReadLine();
             if (!answer14.Equals(""))
             {
-                if (MainControl.DeleteTaskList(MainControl.FindList(answer14, currentUser), currentUser)) // If deleted was correctly
+                ToDoTaskList list = MainControl.FindList(answer14, currentUser);
+                if (list != null) // If deleted was correctly
                 {
+                    MainControl.Delete(list);
                     Console.WriteLine("List with name \"" + answer14 + "\" has been succesfully deleted");
                     currentUser = UserLab.Get().GetUser(currentUser.Id); // Refresh current user
                     if (currentList != null)
@@ -311,10 +323,8 @@ namespace SimpleTestApp
                     }
                 }
                 else
-                    Console.WriteLine("Err");
+                    Console.WriteLine("List with name: \"" + answer14 + "\" not found");
             }
-            else
-                Console.WriteLine("List with name: \"" + answer14 + "\" not found");
         }
 
         private static int ChooseTaskListByName(int currentMenuLevel) //Choose some taskList by name
@@ -349,7 +359,6 @@ namespace SimpleTestApp
                 Console.WriteLine("Task List \"" + currentUser.ListOfLists.Last().Title + "\" has been created ");
             }
         }
-
         private static bool RegLogAction(bool newUser) //Registration or loginin user
         {
             if (newUser)
@@ -372,7 +381,7 @@ namespace SimpleTestApp
             {
                 Console.Write("Username: "); string username = Console.ReadLine();
                 Console.Write("Password: "); string password = Console.ReadLine();
-                currentUser = MainControl.UserLoginIn(username, password);
+                currentUser = MainControl.FindUser(username, password);
                 if (currentUser == null)
                 {
                     Console.Write("\n User not founded ");

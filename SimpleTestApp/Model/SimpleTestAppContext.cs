@@ -12,5 +12,7 @@ namespace SimpleTestApp.Model
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<ToDoTaskList> ToDoTaskLists { get; set; }
+        public DbSet<ToDoTask> ToDoTasks { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace SimpleTestApp.Model
     {
         private static UserLab userLab;
         private List<User> userList;
+        SimpleTestAppContext context = new SimpleTestAppContext();
 
         public static UserLab Get()
         {
@@ -22,28 +23,43 @@ namespace SimpleTestApp.Model
         private UserLab()
         {
             userList = new List<User>();
-            //Debug
-            userList.Add(new User("uname", "fname", "lname", "pass"));
-
         }
 
         public List<User> GetUserList()
         {
-            using (SimpleTestAppContext context = new SimpleTestAppContext())
-            {
-
-                return userList;
-            }
+            return null;
         }
 
-        public void AddUser(User user)
+        public void Add(User user)
         {
-            using (SimpleTestAppContext context = new SimpleTestAppContext())
-            {
-                userList.Add(user);
-                context.Users.Add(user);
-                context.SaveChanges();
-            }
+            context.Users.Add(user);
+            context.SaveChanges();
+        }
+        public void Add(ToDoTask task)
+        {
+            context.ToDoTasks.Add(task);
+            context.SaveChanges();
+        }
+        public void Add(ToDoTaskList list)
+        {
+            context.ToDoTaskLists.Add(list);
+            context.SaveChanges();
+        }
+
+        public void Remove(User user)
+        {
+            context.Users.Remove(user);
+            context.SaveChanges();
+        }
+        public void Remove(ToDoTaskList list)
+        {
+            context.ToDoTaskLists.Remove(list);
+            context.SaveChanges();
+        }
+        public void Remove(ToDoTask task)
+        {
+            context.ToDoTasks.Remove(task);
+            context.SaveChanges();
         }
 
         public User GetUser(string username, string password)
@@ -56,58 +72,35 @@ namespace SimpleTestApp.Model
                     .Where(c => (c.Username == username && c.Password == password))
                     .FirstOrDefault();
                 return user;
-
-                foreach (var item in userList)
-                {
-                    if (item.Username.Equals(username) && item.Password.Equals(password))
-                        return item;
-                }
-                return null;
             }
         }
-
         public User GetUser(Guid id)
         {
-            using (SimpleTestAppContext context = new SimpleTestAppContext())
-            {
-                User user = context.Users
-                    .Include(u => u.ListOfLists)
-                    .Include(u => u.ListOfLists.Select(t => t.Tasks))
-                    .Where(c => c.Id == id)
-                    .FirstOrDefault();
-                return context.Users.Find(user.Id);
-
-                foreach (var item in userList)
-                {
-                    if (item.Id.Equals(id))
-                        return item;
-                }
-                return null;
-            }
+            return context.Users.Find(id);
         }
 
-        public void ModifyUser (User user)
+        public void Modify(User user)
         {
-            using (SimpleTestAppContext context = new SimpleTestAppContext())
-            {
-                User userModify = context.Users.Find(user.Id);
-                //userModify = user;
-                userModify.FirstName = user.FirstName;
-                userModify.LastName = user.LastName;
-                userModify.Username = user.Username;
-                userModify.Password = user.Password;
-                userModify.ListOfLists = user.ListOfLists;
-                context.SaveChanges();
-                /*
-                for (int i = 0; i < userList.Count; i++)
-                {
-                    if (userList[i].Id.Equals(user.Id))
-                    {
-                        userList[i] = user;
-                        break;
-                    }
-                }*/
-            }
+            User userModify = context.Users.Find(user.Id);
+            userModify.FirstName = user.FirstName;
+            userModify.LastName = user.LastName;
+            userModify.Username = user.Username;
+            userModify.Password = user.Password;
+            context.SaveChanges();
+        }
+        public void Modify(ToDoTaskList list)
+        {
+            ToDoTaskList modifyList = context.ToDoTaskLists.Find(list.Id);
+            modifyList.Tasks = list.Tasks;
+            modifyList.Title = list.Title;
+            context.SaveChanges();
+        }
+        public void Modify(ToDoTask task)
+        {
+            ToDoTask modifyTask = context.ToDoTasks.Find(task.Id);
+            modifyTask.Text = task.Text;
+            modifyTask.Title = task.Title;
+            context.SaveChanges();
         }
     }
 }

@@ -16,38 +16,18 @@ namespace SimpleTestApp.Control
             {
                 if (UserLab.Get().GetUser(user.Username, user.Password) != null) // If already exist currentUser with this userName and password
                     return null;
-                UserLab.Get().AddUser(user);
+                UserLab.Get().Add(user);
             }
             return user;
         }
-        static public User UserLoginIn(string username, string password)
+
+
+        static public User FindUser(string username, string password)
         {
             User user = UserLab.Get().GetUser(username, password);
             if (user == null)
                 return null;
             return user;
-        }
-        static public void UserLoginOut()
-        {
-            //goto labelStart;
-        }
-
-        static public User AddToUserListOfList(string title, User user) // II stage
-        {
-            ToDoTaskList toDoTaskList = new ToDoTaskList(user.Id, title);
-
-            user.ListOfLists.Add(toDoTaskList);
-            UserLab.Get().ModifyUser(user);
-
-            return UserLab.Get().GetUser(user.Id);
-        }
-        static public string GetTitlesOfAllTaskLists(User user) // Return list of titles All TaskList
-        {
-            //Remake from string to stringBuilder
-            string allTitles = "";
-            foreach (var item in user.ListOfLists)
-                allTitles += "Title: \"" + item.Title + "\"; id: " + item.Id + "\n";
-            return allTitles;
         }
         static public ToDoTaskList FindList(string title, User user)
         {
@@ -58,59 +38,6 @@ namespace SimpleTestApp.Control
             }
             return null;
         }
-
-        static public bool DeleteTaskList(ToDoTaskList list, User user) // Delete founded list
-        {
-            bool result = user.ListOfLists.Remove(list);
-            if (result)
-                UserLab.Get().ModifyUser(user); // Modify singletone 
-            return result;
-        }
-        static public User AddTask(string title, string text, ToDoTaskList taskList, User user) // Add task into tasklist III stage
-        {
-            ToDoTask task = new ToDoTask(title, text);
-
-            ToDoTaskList newList = taskList;
-            newList.Tasks.Add(task);
-
-
-            User modifyUser = ModifyUserTaskLists(taskList, user);
-            //user.ListOfLists[user.ListOfLists.IndexOf(taskList)] = newList;
-
-            //UserLab.Get().ModifyUser(user);
-            UserLab.Get().ModifyUser(modifyUser); // Push to singleton
-            return UserLab.Get().GetUser(user.Id); // Pull from singleton 
-        }
-        static public string GetAllTaskInList(ToDoTaskList taskList, User user) //Return list of titles All Tasks in list
-        {
-            //Remake from string to stringBuilder
-            string result = "";
-            List<ToDoTask> list = FindList(taskList.Title, user).Tasks; // Debug. Get  current 
-            foreach (var item in list)
-                result += "Title: \"" + item.Title + "\" is "+(item.IsCompleted ? "Completed" : "Not completed") +"; Text: \"" + item.Text + "\" id: " + item.Id + "\n";
-            return result;
-        }
-        static public bool DeleteTask(ToDoTask task, ToDoTaskList taskList, User user)
-        {
-            bool result = taskList.Tasks.Remove(task);
-            User modifyUser = ModifyUserTaskLists(taskList, user);
-            if (result)
-                UserLab.Get().ModifyUser(modifyUser); // Modify singletone 
-            return result;
-        }
-
-        static public User ModifyUserTaskLists(ToDoTaskList list, User user) // Modify users one Task list
-        {
-            Guid lsitId = list.Id;
-            for (int i = 0; i < user.ListOfLists.Count; i++)
-            {
-                if (user.ListOfLists[i].Id.Equals(list.Id))
-                    user.ListOfLists[i] = list;
-            }
-            UserLab.Get().ModifyUser(user);
-            return UserLab.Get().GetUser(user.Id);
-        }
-
         static public ToDoTask FindTask(string title, ToDoTaskList taskList)
         {
             foreach (var item in taskList.Tasks)
@@ -121,17 +48,60 @@ namespace SimpleTestApp.Control
             return null;
         }
 
-        static public User ModifyTask(ToDoTask task, ToDoTaskList taskList, User user) // Modify task in users taskList 
+        static public void Delete(ToDoTaskList list) // Delete founded list
         {
-            Guid taskId = task.Id;
-            for (int i = 0; i < taskList.Tasks.Count; i++)
-            {
-                if (taskList.Tasks[i].Id.Equals(task.Id))
-                    taskList.Tasks[i] = task;
-            }
-            User userModify = ModifyUserTaskLists(taskList, user);
-            UserLab.Get().ModifyUser(userModify);
-            return userModify;
+            UserLab.Get().Remove(list);
+        }
+        static public void Delete(ToDoTask task) // Delete founded list
+        {
+            UserLab.Get().Remove(task);
+        }
+        static public void Delete(User user) // Delete founded list
+        {
+            UserLab.Get().Remove(user);
+        }
+
+        static public User AddToUserListOfList(string title, User user) // II stage
+        {
+            ToDoTaskList toDoTaskList = new ToDoTaskList(user.Id, title);
+            UserLab.Get().Add(toDoTaskList);
+            return UserLab.Get().GetUser(user.Id);
+        }
+        static public User AddTask(string title, string text, ToDoTaskList taskList, User user) // Add task into tasklist III stage
+        {
+            ToDoTask task = new ToDoTask(title, text, taskList.Id);
+            UserLab.Get().Add(task);
+            return UserLab.Get().GetUser(user.Id); // Pull from singleton 
+        }
+
+
+        static public string GetTitlesOfAllTaskLists(User user) // Return list of titles All TaskList
+        {
+            //Remake from string to stringBuilder
+            string allTitles = "";
+            foreach (var item in user.ListOfLists)
+                allTitles += "Title: \"" + item.Title + "\"; id: " + item.Id + "\n";
+            return allTitles;
+        }
+        static public string GetAllTaskInList(ToDoTaskList taskList, User user) //Return list of titles All Tasks in list
+        {
+            //Remake from string to stringBuilder
+            string result = "";
+            List<ToDoTask> list = FindList(taskList.Title, user).Tasks; // Debug. Get  current 
+            foreach (var item in list)
+                result += "Title: \"" + item.Title + "\" is "+(item.IsCompleted ? "Completed" : "Not completed") +"; Text: \"" + item.Text + "\" id: " + item.Id + "\n";
+            return result;
+        }
+
+        static public User ModifyUserTaskLists(ToDoTaskList list, User user) // Modify users one Task list
+        {
+            UserLab.Get().Modify(list);
+            return UserLab.Get().GetUser(user.Id);
+        }
+        static public User ModifyTask(ToDoTask task, User user) // Modify task in users taskList 
+        {
+            UserLab.Get().Modify(task);
+            return UserLab.Get().GetUser(user.Id);
         }
     }
 }
