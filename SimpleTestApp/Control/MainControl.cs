@@ -77,20 +77,18 @@ namespace SimpleTestApp.Control
 
         static public string GetTitlesOfAllTaskLists(User user) // Return list of titles All TaskList
         {
-            //Remake from string to stringBuilder
-            string allTitles = "";
+            StringBuilder result = new StringBuilder();
             foreach (var item in user.ListOfLists)
-                allTitles += "Title: \"" + item.Title + "\"; id: " + item.Id + "\n";
-            return allTitles;
+                result.Append("Title: \"" + item.Title + "\"; id: " + item.Id + "\n");
+            return result.ToString();
         }
         static public string GetAllTaskInList(ToDoTaskList taskList, User user) //Return list of titles All Tasks in list
         {
-            //Remake from string to stringBuilder
-            string result = "";
+            StringBuilder result = new StringBuilder();
             List<ToDoTask> list = FindList(taskList.Title, user).Tasks; // Debug. Get  current 
             foreach (var item in list)
-                result += "Title: \"" + item.Title + "\" is "+(item.IsCompleted ? "Completed" : "Not completed") +"; Text: \"" + item.Text + "\" id: " + item.Id + "\n";
-            return result;
+                result.Append("Title: \"" + item.Title + "\" is "+(item.IsCompleted ? "Completed" : "Not completed") +"; Text: \"" + item.Text + "\" id: " + item.Id + "\n");
+            return result.ToString();
         }
 
         static public User Modify(ToDoTaskList list, User user) // Modify users one Task list

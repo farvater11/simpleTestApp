@@ -49,7 +49,7 @@ namespace SimpleTestApp.Model
         public void Remove(User user)
         {
             context.Users.Remove(user);
-            context.Entry(user).State = EntityState.Deleted;
+            //context.Entry(user).State = EntityState.Deleted;
             context.SaveChanges();
         }
         public void Remove(ToDoTaskList list)
