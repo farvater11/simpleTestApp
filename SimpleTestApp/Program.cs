@@ -32,10 +32,10 @@ namespace SimpleTestApp
 
                             HeadPartView();
 
-                            Console.Write("LoginIn[1] or Register[2]: "); string answer0 = Console.ReadLine();
-                            if (answer0.Equals("1"))
+                            Console.Write("LoginIn[1] or Register[2]: "); string answer = Console.ReadLine();
+                            if (answer.Equals("1"))
                                 result = RegLogAction(false);
-                            else if (answer0.Equals("2"))
+                            else if (answer.Equals("2"))
                                 result = RegLogAction(true);
                             else
                                 result = false;
@@ -55,14 +55,15 @@ namespace SimpleTestApp
                             Console.WriteLine("||See all your taskLists....(2)||");
                             Console.WriteLine("||Choose some taskList......(3)||");
                             Console.WriteLine("||Delete some taskList......(4)||");
+                            Console.WriteLine("||.............................||");
                             Console.WriteLine("||Log out...................(0)||");
-                            Console.WriteLine("||Delete account..........(100)||");
+                            Console.WriteLine("||Delete account............(9)||");
                             Console.WriteLine("  =============================  ");
-                            Console.Write("Choose action: "); string answer1 = Console.ReadLine();
+                            Console.Write("Choose action: "); string answer = Console.ReadLine();
                             Console.WriteLine();
-                            try
+                            if (answer.Length == 1 & ((int)answer[0] >= 48) & ((int)answer[0] <= 57))
                             {
-                                switch (Convert.ToInt32(answer1))
+                                switch (Convert.ToInt32(answer))
                                 {
                                     case 1:
                                         CreateTaskList();
@@ -80,19 +81,14 @@ namespace SimpleTestApp
                                         currentMenuLevel = 0;
                                         currentUser = null;
                                         break;
-                                    case 100:
+                                    case 9:
                                         currentMenuLevel = DeleteAccount(currentMenuLevel);
                                         break;
                                 }
                             }
-                            catch(System.FormatException ex)
-                            {
-                                Console.WriteLine(ex.Message + "\nPlease input correct number");
-                            }
-                            finally
-                            {
-                                ExitPartView();
-                            }
+                            else
+                                Console.WriteLine("Not correct format. Use just one number for make a choise.");
+                            ExitPartView();
                         }
                         while (currentMenuLevel.Equals(1));
                         break;
@@ -108,11 +104,11 @@ namespace SimpleTestApp
                             Console.WriteLine("||Delete some task in task..(5)||");
                             Console.WriteLine("||Return....................(0)||");
                             Console.WriteLine("  =============================  ");
-                            Console.Write("Choose action: "); string answer2 = Console.ReadLine();
+                            Console.Write("Choose action: "); string answer = Console.ReadLine();
                             Console.WriteLine();
-                            try
+                            if (answer.Length <= 1 & ((int)answer[0] >= 48) & ((int)answer[0] <= 57))
                             {
-                                switch (Convert.ToInt32(answer2))
+                                switch (Convert.ToInt32(answer))
                                 {
                                     case 1:
                                         RenameCurrentList();
@@ -135,14 +131,9 @@ namespace SimpleTestApp
                                         break;
                                 }
                             }
-                            catch (System.FormatException ex)
-                            {
-                                Console.WriteLine(ex.Message + "\n\nPlease input correct number");
-                            }
-                            finally
-                            {
-                                ExitPartView();
-                            }    
+                            else
+                                Console.WriteLine("Not correct format. Use just one number for make a choise.");
+                            ExitPartView();
                         }
                         while (currentMenuLevel.Equals(2));
                         break;
@@ -155,11 +146,11 @@ namespace SimpleTestApp
                             Console.WriteLine("||See current task..........(2)||");
                             Console.WriteLine("||Return....................(0)||");
                             Console.WriteLine("  =============================  ");
-                            Console.Write("Choose action: "); string answer3 = Console.ReadLine();
+                            Console.Write("Choose action: "); string answer = Console.ReadLine();
                             Console.WriteLine();
-                            try
+                            if (answer.Length <= 1 & ((int)answer[0] >= 48) & ((int)answer[0] <= 57))
                             {
-                                switch (Convert.ToInt32(answer3))
+                                switch (Convert.ToInt32(answer))
                                 {
                                     case 1:
                                         ModifyCurrentTask();
@@ -173,14 +164,9 @@ namespace SimpleTestApp
                                         break;
                                 }
                             }
-                            catch (System.FormatException ex)
-                            {
-                                Console.WriteLine(ex.Message + "\n\nPlease input correct number");
-                            }
-                            finally
-                            {
-                                ExitPartView();
-                            }
+                            else
+                                Console.WriteLine("Not correct format. Use just one number for make a choise.");
+                            ExitPartView();
                         }
                         while (currentMenuLevel.Equals(3));
                         break;
@@ -230,7 +216,7 @@ namespace SimpleTestApp
             Console.Write("Current status: \"" + (currentTask.IsCompleted ? "Completed" : "Not completed") + "\". Input new status (+/~): "); string answerCompleted = Console.ReadLine();
             if (!answerCompleted.Equals(""))  currentTask.IsCompleted = (answerCompleted.Equals("+") ? true : false);
 
-            currentUser = MainControl.ModifyTask(currentTask, currentUser);
+            currentUser = MainControl.Modify(currentTask, currentUser);
             currentList = MainControl.FindList(currentList.Title, currentUser);
             currentTask = MainControl.FindTask(currentTask.Title, currentList); // Refresh. Now not useful, but in future can be useful 
 
@@ -239,7 +225,7 @@ namespace SimpleTestApp
 
         private static void DeleteTaskInCurrentListByName()//Delete task in current taskList using name
         {
-            Console.Write("Delete some task in current taskList ? (skip if don`t) (%Title%): "); string answer15 = Console.ReadLine();
+            Console.Write("Delete task in current taskList ? (skip if don`t) (%Title%): "); string answer15 = Console.ReadLine();
             if (!answer15.Equals(""))
             {
                 ToDoTask taskForDelete = MainControl.FindTask(answer15, currentList);
@@ -275,9 +261,9 @@ namespace SimpleTestApp
 
         private static void SeeAllTasksInCurrentList() //See all tasks in list 
         {
-            List<ToDoTask> list = MainControl.FindList(currentList.Title, currentUser).Tasks; // Debug. Get  current . Getting count of tasks
+            //List<ToDoTask> list = MainControl.FindList(currentList.Title, currentUser).Tasks; // Debug. Get  current . Getting count of tasks
 
-            Console.WriteLine("Total count of tasks " + list.Count + " :");
+            Console.WriteLine("Total count of tasks " + currentList.Tasks.Count() + " :");
             Console.WriteLine(MainControl.GetAllTaskInList(currentList, currentUser));
         }
 
@@ -287,8 +273,9 @@ namespace SimpleTestApp
             if (!answer12.Equals(""))
             {
                 Console.Write("Input new task: "); string answerNewTask = Console.ReadLine();
-                currentUser = MainControl.AddTask(answer12, answerNewTask, currentList, currentUser);
-                currentList = MainControl.FindList(currentList.Title, currentUser);
+                currentUser = MainControl.Add(answer12, answerNewTask, currentList, currentUser);
+                currentList = MainControl.FindList(currentList.Title, UserLab.Get().GetUser(currentUser.Id));
+
                 ToDoTask task = MainControl.FindTask(answer12, currentList);
                 Console.WriteLine("\nIn tasklist \"" + currentList.Title + "\" succesfully has been added new task \"" + task.Title + "\"");
             }
@@ -297,12 +284,15 @@ namespace SimpleTestApp
         private static void RenameCurrentList()//Modify tasklist
         {
             Console.Write("Current title: \"" + currentList.Title + "\"; Input new title: "); string answerTitle = Console.ReadLine();
-            currentList.Title = answerTitle;
+            if (!answerTitle.Equals(""))
+            {
+                currentList.Title = answerTitle;
 
-            currentUser = MainControl.ModifyUserTaskLists(currentList, currentUser);
-            currentList = MainControl.FindList(currentList.Title, currentUser); // Refresh.
+                currentUser = MainControl.Modify(currentList, currentUser);
+                currentList = MainControl.FindList(answerTitle, currentUser); // Refresh.
 
-            Console.WriteLine("You modified list with name \"" + currentList.Title + "\"; and id: " + currentList.Id);
+                Console.WriteLine("You modified list with name \"" + currentList.Title + "\"; and id: " + currentList.Id);
+            } 
         }
 
         private static void DeleteTaskListByName()//Delete tasklist  using name 
@@ -311,7 +301,7 @@ namespace SimpleTestApp
             if (!answer14.Equals(""))
             {
                 ToDoTaskList list = MainControl.FindList(answer14, currentUser);
-                if (list != null) // If deleted was correctly
+                if (list != null) // If list exist
                 {
                     MainControl.Delete(list);
                     Console.WriteLine("List with name \"" + answer14 + "\" has been succesfully deleted");
@@ -355,10 +345,11 @@ namespace SimpleTestApp
             Console.Write("Create new taskList? (%Title%): "); string answer11 = Console.ReadLine();
             if (!answer11.Equals(""))
             {
-                currentUser = MainControl.AddToUserListOfList(answer11, currentUser); // Add new List to ListOfList and refresh currentUser link 
+                currentUser = MainControl.Add(answer11, currentUser); // Add new List to ListOfList and refresh currentUser link 
                 Console.WriteLine("Task List \"" + currentUser.ListOfLists.Last().Title + "\" has been created ");
             }
         }
+
         private static bool RegLogAction(bool newUser) //Registration or loginin user
         {
             if (newUser)
@@ -367,12 +358,16 @@ namespace SimpleTestApp
                 Console.Write("First name: "); string firstName = Console.ReadLine();
                 Console.Write("Last name: "); string lastName = Console.ReadLine();
                 Console.Write("Password: "); string password = Console.ReadLine();
-
-                currentUser = MainControl.UserRegistration(username, firstName, lastName, password);
-                if (currentUser != null)
-                    Console.WriteLine("\nYou are successfully registered!");
+                if (!username.Equals("") & !password.Equals(""))
+                {
+                    currentUser = MainControl.UserRegistration(username, firstName, lastName, password);
+                    if (currentUser != null)
+                        Console.WriteLine("\nYou are successfully registered!");
+                    else
+                        Console.WriteLine("\nUser already does exist");
+                }
                 else
-                    Console.WriteLine("\nUser already does exist");
+                    Console.WriteLine("Filds \"Username\" and \"Password\" are required.");
                 Console.ReadKey();
                 return false;
             }

@@ -49,34 +49,48 @@ namespace SimpleTestApp.Model
         public void Remove(User user)
         {
             context.Users.Remove(user);
+            context.Entry(user).State = EntityState.Deleted;
             context.SaveChanges();
         }
         public void Remove(ToDoTaskList list)
         {
             context.ToDoTaskLists.Remove(list);
+            //context.Entry(list).State = EntityState.Deleted;
             context.SaveChanges();
         }
         public void Remove(ToDoTask task)
         {
             context.ToDoTasks.Remove(task);
+            //context.Entry(task).State = EntityState.Deleted;
             context.SaveChanges();
         }
 
         public User GetUser(string username, string password)
         {
-            using (SimpleTestAppContext context = new SimpleTestAppContext())
-            {
-                User user = context.Users
-                    .Include(u => u.ListOfLists)
-                    .Include(u => u.ListOfLists.Select(t => t.Tasks))
-                    .Where(c => (c.Username == username && c.Password == password))
-                    .FirstOrDefault();
-                return user;
-            }
+            User user = context.Users
+                .Include(u => u.ListOfLists)
+                .Include(u => u.ListOfLists.Select(t => t.Tasks))
+                .Where(c => (c.Username == username && c.Password == password))
+                .FirstOrDefault();
+            return user;
+        }
+        public User GetUser(string username)
+        {
+            User user = context.Users
+               .Include(u => u.ListOfLists)
+               .Include(u => u.ListOfLists.Select(t => t.Tasks))
+               .Where(c => (c.Username == username))
+               .FirstOrDefault();
+            return user;
         }
         public User GetUser(Guid id)
         {
-            return context.Users.Find(id);
+            User user = context.Users
+                .Include(u => u.ListOfLists)
+                .Include(u => u.ListOfLists.Select(t => t.Tasks))
+                .Where(c => (c.Id.Equals(id)))
+                .FirstOrDefault();
+            return user;
         }
 
         public void Modify(User user)
@@ -91,7 +105,6 @@ namespace SimpleTestApp.Model
         public void Modify(ToDoTaskList list)
         {
             ToDoTaskList modifyList = context.ToDoTaskLists.Find(list.Id);
-            modifyList.Tasks = list.Tasks;
             modifyList.Title = list.Title;
             context.SaveChanges();
         }
@@ -100,6 +113,7 @@ namespace SimpleTestApp.Model
             ToDoTask modifyTask = context.ToDoTasks.Find(task.Id);
             modifyTask.Text = task.Text;
             modifyTask.Title = task.Title;
+            modifyTask.IsCompleted = task.IsCompleted;
             context.SaveChanges();
         }
     }

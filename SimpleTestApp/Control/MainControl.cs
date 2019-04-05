@@ -14,7 +14,7 @@ namespace SimpleTestApp.Control
             SimpleTestApp.Model.User user = new User(username, firstName, lastName, password);
             if (user != null)
             {
-                if (UserLab.Get().GetUser(user.Username, user.Password) != null) // If already exist currentUser with this userName and password
+                if (UserLab.Get().GetUser(user.Username) != null) // If already exist currentUser with this userName and password
                     return null;
                 UserLab.Get().Add(user);
             }
@@ -31,7 +31,8 @@ namespace SimpleTestApp.Control
         }
         static public ToDoTaskList FindList(string title, User user)
         {
-            foreach (var item in user.ListOfLists)
+            User user1 = UserLab.Get().GetUser(user.Id);
+            foreach (var item in user1.ListOfLists)
             {
                 if (item.Title.Equals(title))
                     return item;
@@ -56,24 +57,23 @@ namespace SimpleTestApp.Control
         {
             UserLab.Get().Remove(task);
         }
-        static public void Delete(User user) // Delete founded list
+        static public void Delete(User user) // Delete founded user
         {
             UserLab.Get().Remove(user);
         }
 
-        static public User AddToUserListOfList(string title, User user) // II stage
+        static public User Add(string title, User user) // II stage
         {
             ToDoTaskList toDoTaskList = new ToDoTaskList(user.Id, title);
             UserLab.Get().Add(toDoTaskList);
             return UserLab.Get().GetUser(user.Id);
         }
-        static public User AddTask(string title, string text, ToDoTaskList taskList, User user) // Add task into tasklist III stage
+        static public User Add(string title, string text, ToDoTaskList taskList, User user) // Add task into tasklist III stage
         {
             ToDoTask task = new ToDoTask(title, text, taskList.Id);
             UserLab.Get().Add(task);
             return UserLab.Get().GetUser(user.Id); // Pull from singleton 
         }
-
 
         static public string GetTitlesOfAllTaskLists(User user) // Return list of titles All TaskList
         {
@@ -93,12 +93,12 @@ namespace SimpleTestApp.Control
             return result;
         }
 
-        static public User ModifyUserTaskLists(ToDoTaskList list, User user) // Modify users one Task list
+        static public User Modify(ToDoTaskList list, User user) // Modify users one Task list
         {
             UserLab.Get().Modify(list);
             return UserLab.Get().GetUser(user.Id);
         }
-        static public User ModifyTask(ToDoTask task, User user) // Modify task in users taskList 
+        static public User Modify(ToDoTask task, User user) // Modify task in users taskList 
         {
             UserLab.Get().Modify(task);
             return UserLab.Get().GetUser(user.Id);
